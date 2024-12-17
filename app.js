@@ -11,6 +11,8 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 
+app.use('/notes', require('./routes/NoteRoutes'));
+
 // --- GET Route ---
 app.get('/app', (req, res) => {
     res.send('Welcome to the root route!');

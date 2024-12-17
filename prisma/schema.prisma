@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+datasource db {
+  provider = "postgresql"  // Fournisseur PostgreSQL
+  url      = env("DATABASE_URL")  // Récupère l'URL de la base de données depuis le fichier `.env`
+}
+
+generator client {
+  provider = "prisma-client-js"  // Génère le client Prisma
+}
+
+model User {
+  id         String      @id @default(cuid())
+  firstname String
+  lastname  String
+  email      String   @unique
+  password   String 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  Note Note[]
+}
+
+
+model Note {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  Categorry Categorry[]
+
+  TagNote TagNote[]
+}
+
+
+
+model Categorry {
+  id        String   @id @default(cuid())
+  title     String   
+  notes     Note[]
+  
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  title     String
+
+  TagNote TagNote[]
+}
+
+model TagNote {
+  id        String   @id @default(cuid())
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  noteId    String
+  note      Note     @relation(fields: [noteId], references: [id])
+
+}
